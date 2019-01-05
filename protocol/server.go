@@ -28,6 +28,9 @@ type Listener struct {
 	// Trace function for logging
 	Trace Tracer
 
+	// Versioned is set to true on the first call to Tversion
+	Versioned bool
+
 	// mu guards below
 	mu sync.Mutex
 
@@ -248,6 +251,19 @@ func (c *conn) serve() {
 func Dispatch(s *Server, b *bytes.Buffer, t MType) error {
 	switch t {
 	case Tversion:
+		s.Versioned = true
+	default:
+		if !s.Versioned {
+			m := fmt.Sprintf("Dispatch: %v not allowed before Tversion", RPCNames[t])
+			// Yuck. Provide helper.
+			d := b.Bytes()
+			MarshalRerrorPkt(b, Tag(d[0])|Tag(d[1])<<8, m)
+			return fmt.Errorf("Dispatch: %v not allowed before Tversion", RPCNames[t])
+		}
+	}
+
+	switch t {
+	case Tversion:
 		return s.SrvRversion(b)
 	case Tattach:
 		return s.SrvRattach(b)
@@ -272,6 +288,7 @@ func Dispatch(s *Server, b *bytes.Buffer, t MType) error {
 	case Twrite:
 		return s.SrvRwrite(b)
 	}
+
 	// This has been tested by removing Attach from the switch.
 	ServerError(b, fmt.Sprintf("Dispatch: %v not supported", RPCNames[t]))
 	return nil
