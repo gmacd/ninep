@@ -192,10 +192,6 @@ func (e *FileServer) Rcreate(fid protocol.FID, name string, perm protocol.Perm, 
 		if err != nil {
 			return protocol.QID{}, 0, err
 		}
-		f.file, err = os.Open(n)
-		if err != nil {
-			return protocol.QID{}, 0, err
-		}
 		f.fullName = n
 		f.QID = q
 		return q, 8000, err
