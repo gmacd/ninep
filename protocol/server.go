@@ -28,9 +28,6 @@ type Listener struct {
 	// Trace function for logging
 	Trace Tracer
 
-	// Versioned is set to true on the first call to Tversion
-	Versioned bool
-
 	// mu guards below
 	mu sync.Mutex
 
@@ -43,6 +40,9 @@ type Listener struct {
 type Server struct {
 	NS NineServer
 	D  Dispatcher
+
+	// Versioned is set to true on the first call to Tversion
+	Versioned bool
 }
 
 type conn struct {
