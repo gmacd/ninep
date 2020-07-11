@@ -16,6 +16,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Harvey-OS/ninep/pkg/debugfs"
 	"github.com/Harvey-OS/ninep/protocol"
 )
 
@@ -454,7 +455,7 @@ func NewUFS(opts ...protocol.ListenerOpt) (*protocol.Listener, error) {
 		// any opts for the ufs layer can be added here too ...
 		var d protocol.NineServer = f
 		if *debug != 0 {
-			d = &DebugFileServer{f}
+			d = &debugfs.DebugFileServer{FileServer: f}
 		}
 		return d
 	}
