@@ -454,7 +454,7 @@ func NewUFS(opts ...protocol.ListenerOpt) (*protocol.Listener, error) {
 		// any opts for the ufs layer can be added here too ...
 		var d protocol.NineServer = f
 		if *debug != 0 {
-			d = &debugFileServer{f}
+			d = &DebugFileServer{f}
 		}
 		return d
 	}

@@ -79,8 +79,8 @@ func TestMount(t *testing.T) {
 	}
 	t.Logf("Client is %v", c.String())
 
-	n, err := NewUFS(func(s *protocol.Server) error {
-		s.Trace = print //t.Logf
+	n, err := NewUFS(func(l *protocol.Listener) error {
+		l.Trace = print //t.Logf
 		return nil
 	})
 	if err != nil {

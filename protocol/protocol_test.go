@@ -242,7 +242,7 @@ func (e *echo) Rwalk(fid FID, newfid FID, paths []string) ([]QID, error) {
 	}
 	switch paths[0] {
 	case "null":
-		return []QID{QID{Type: 0, Version: 0, Path: 0xaa55}}, nil
+		return []QID{{Type: 0, Version: 0, Path: 0xaa55}}, nil
 	}
 	return nil, nil
 }
@@ -329,11 +329,12 @@ func TestTManyRPCs(t *testing.T) {
 	}
 	t.Logf("Client is %v", c.String())
 
-	e := newEcho()
-	s, err := NewServer(e, func(s *Server) error {
-		s.Trace = print
-		return nil
-	})
+	s, err := NewListener(
+		func() NineServer { return newEcho() },
+		func(l *Listener) error {
+			l.Trace = print
+			return nil
+		})
 	if err != nil {
 		t.Fatalf("NewServer: want nil, got %v", err)
 	}
@@ -367,12 +368,12 @@ func TestTMessages(t *testing.T) {
 	}
 	t.Logf("Client is %v", c.String())
 
-	e := newEcho()
-	s, err := NewServer(e, func(s *Server) error {
-		s.Trace = print // t.Logf
-		s.NS = e
-		return nil
-	})
+	s, err := NewListener(
+		func() NineServer { return newEcho() },
+		func(l *Listener) error {
+			l.Trace = print // t.Logf
+			return nil
+		})
 
 	if err != nil {
 		t.Fatalf("NewServer: want nil, got %v", err)
@@ -504,11 +505,10 @@ func BenchmarkNull(b *testing.B) {
 	}
 	b.Logf("Client is %v", c.String())
 
-	e := newEcho()
-	s, err := NewServer(e, func(s *Server) error {
-		s.NS = e
-		return nil
-	})
+	s, err := NewListener(
+		func() NineServer {
+			return newEcho()
+		})
 
 	if err != nil {
 		b.Fatalf("NewServer: want nil, got %v", err)
