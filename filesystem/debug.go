@@ -11,11 +11,11 @@ import (
 	"github.com/Harvey-OS/ninep/protocol"
 )
 
-type debugFileServer struct {
+type DebugFileServer struct {
 	*FileServer
 }
 
-func (e *debugFileServer) Rversion(msize protocol.MaxSize, version string) (protocol.MaxSize, string, error) {
+func (e *DebugFileServer) Rversion(msize protocol.MaxSize, version string) (protocol.MaxSize, string, error) {
 	log.Printf(">>> Tversion %v %v\n", msize, version)
 	msize, version, err := e.FileServer.Rversion(msize, version)
 	if err == nil {
@@ -26,7 +26,7 @@ func (e *debugFileServer) Rversion(msize protocol.MaxSize, version string) (prot
 	return msize, version, err
 }
 
-func (e *debugFileServer) Rattach(fid protocol.FID, afid protocol.FID, uname string, aname string) (protocol.QID, error) {
+func (e *DebugFileServer) Rattach(fid protocol.FID, afid protocol.FID, uname string, aname string) (protocol.QID, error) {
 	log.Printf(">>> Tattach fid %v,  afid %v, uname %v, aname %v\n", fid, afid,
 		uname, aname)
 	qid, err := e.FileServer.Rattach(fid, afid, uname, aname)
@@ -38,7 +38,7 @@ func (e *debugFileServer) Rattach(fid protocol.FID, afid protocol.FID, uname str
 	return qid, err
 }
 
-func (e *debugFileServer) Rflush(o protocol.Tag) error {
+func (e *DebugFileServer) Rflush(o protocol.Tag) error {
 	log.Printf(">>> Tflush tag %v\n", o)
 	err := e.FileServer.Rflush(o)
 	if err == nil {
@@ -49,7 +49,7 @@ func (e *debugFileServer) Rflush(o protocol.Tag) error {
 	return err
 }
 
-func (e *debugFileServer) Rwalk(fid protocol.FID, newfid protocol.FID, paths []string) ([]protocol.QID, error) {
+func (e *DebugFileServer) Rwalk(fid protocol.FID, newfid protocol.FID, paths []string) ([]protocol.QID, error) {
 	log.Printf(">>> Twalk fid %v, newfid %v, paths %v\n", fid, newfid, paths)
 	qid, err := e.FileServer.Rwalk(fid, newfid, paths)
 	if err == nil {
@@ -60,7 +60,7 @@ func (e *debugFileServer) Rwalk(fid protocol.FID, newfid protocol.FID, paths []s
 	return qid, err
 }
 
-func (e *debugFileServer) Ropen(fid protocol.FID, mode protocol.Mode) (protocol.QID, protocol.MaxSize, error) {
+func (e *DebugFileServer) Ropen(fid protocol.FID, mode protocol.Mode) (protocol.QID, protocol.MaxSize, error) {
 	log.Printf(">>> Topen fid %v, mode %v\n", fid, mode)
 	qid, iounit, err := e.FileServer.Ropen(fid, mode)
 	if err == nil {
@@ -71,7 +71,7 @@ func (e *debugFileServer) Ropen(fid protocol.FID, mode protocol.Mode) (protocol.
 	return qid, iounit, err
 }
 
-func (e *debugFileServer) Rcreate(fid protocol.FID, name string, perm protocol.Perm, mode protocol.Mode) (protocol.QID, protocol.MaxSize, error) {
+func (e *DebugFileServer) Rcreate(fid protocol.FID, name string, perm protocol.Perm, mode protocol.Mode) (protocol.QID, protocol.MaxSize, error) {
 	log.Printf(">>> Tcreate fid %v, name %v, perm %v, mode %v\n", fid, name,
 		perm, mode)
 	qid, iounit, err := e.FileServer.Rcreate(fid, name, perm, mode)
@@ -83,7 +83,7 @@ func (e *debugFileServer) Rcreate(fid protocol.FID, name string, perm protocol.P
 	return qid, iounit, err
 }
 
-func (e *debugFileServer) Rclunk(fid protocol.FID) error {
+func (e *DebugFileServer) Rclunk(fid protocol.FID) error {
 	log.Printf(">>> Tclunk fid %v\n", fid)
 	err := e.FileServer.Rclunk(fid)
 	if err == nil {
@@ -94,7 +94,7 @@ func (e *debugFileServer) Rclunk(fid protocol.FID) error {
 	return err
 }
 
-func (e *debugFileServer) Rstat(fid protocol.FID) ([]byte, error) {
+func (e *DebugFileServer) Rstat(fid protocol.FID) ([]byte, error) {
 	log.Printf(">>> Tstat fid %v\n", fid)
 	b, err := e.FileServer.Rstat(fid)
 	if err == nil {
@@ -106,7 +106,7 @@ func (e *debugFileServer) Rstat(fid protocol.FID) ([]byte, error) {
 	return b, err
 }
 
-func (e *debugFileServer) Rwstat(fid protocol.FID, b []byte) error {
+func (e *DebugFileServer) Rwstat(fid protocol.FID, b []byte) error {
 	dir, _ := protocol.Unmarshaldir(bytes.NewBuffer(b))
 	log.Printf(">>> Twstat fid %v, %v\n", fid, dir)
 	err := e.FileServer.Rwstat(fid, b)
@@ -118,7 +118,7 @@ func (e *debugFileServer) Rwstat(fid protocol.FID, b []byte) error {
 	return err
 }
 
-func (e *debugFileServer) Rremove(fid protocol.FID) error {
+func (e *DebugFileServer) Rremove(fid protocol.FID) error {
 	log.Printf(">>> Tremove fid %v\n", fid)
 	err := e.FileServer.Rremove(fid)
 	if err == nil {
@@ -129,7 +129,7 @@ func (e *debugFileServer) Rremove(fid protocol.FID) error {
 	return err
 }
 
-func (e *debugFileServer) Rread(fid protocol.FID, o protocol.Offset, c protocol.Count) ([]byte, error) {
+func (e *DebugFileServer) Rread(fid protocol.FID, o protocol.Offset, c protocol.Count) ([]byte, error) {
 	log.Printf(">>> Tread fid %v, off %v, count %v\n", fid, o, c)
 	b, err := e.FileServer.Rread(fid, o, c)
 	if err == nil {
@@ -140,7 +140,7 @@ func (e *debugFileServer) Rread(fid protocol.FID, o protocol.Offset, c protocol.
 	return b, err
 }
 
-func (e *debugFileServer) Rwrite(fid protocol.FID, o protocol.Offset, b []byte) (protocol.Count, error) {
+func (e *DebugFileServer) Rwrite(fid protocol.FID, o protocol.Offset, b []byte) (protocol.Count, error) {
 	log.Printf(">>> Twrite fid %v, off %v, count %v\n", fid, o, len(b))
 	c, err := e.FileServer.Rwrite(fid, o, b)
 	if err == nil {
